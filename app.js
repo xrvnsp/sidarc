@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderReviews();
   initNavScroll();
   initReveal();
+  initCountUp();
 });
 
 // ─── EXPERTISE LIST ───────────────────────────────────────
@@ -111,4 +112,48 @@ function initReveal() {
     });
   }, { threshold: 0.08 });
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+
+// ─── COUNT-UP ANIMATION ──────────────────────────────────
+function initCountUp() {
+  const counters = document.querySelectorAll('.stat-num[data-target]');
+  if (!counters.length) return;
+
+  const easeOut = t => 1 - Math.pow(1 - t, 3); // cubic ease-out
+
+  function animateCounter(el) {
+    const target = parseFloat(el.dataset.target);
+    const decimal = parseInt(el.dataset.decimal || 0);
+    const duration = 1800; // ms
+    const start = performance.now();
+    const countEl = el.querySelector('.count');
+    if (!countEl) return;
+
+    function step(now) {
+      const elapsed = Math.min(now - start, duration);
+      const progress = easeOut(elapsed / duration);
+      const current = target * progress;
+      countEl.textContent = decimal ? current.toFixed(decimal) : Math.floor(current);
+      if (elapsed < duration) requestAnimationFrame(step);
+      else countEl.textContent = decimal ? target.toFixed(decimal) : target;
+    }
+    requestAnimationFrame(step);
+  }
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // slight stagger per stat
+        const items = entry.target.querySelectorAll('.stat-num[data-target]');
+        items.forEach((el, i) => {
+          setTimeout(() => animateCounter(el), i * 150);
+        });
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  // Observe the whole stats grid
+  const grid = document.querySelector('.stats-grid');
+  if (grid) obs.observe(grid);
 }
