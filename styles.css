@@ -470,6 +470,24 @@ hr.rule {
    ============================================================ */
 #expertise {
     padding: 100px 0;
+    position: relative;
+}
+
+#expertise::before {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(197, 160, 89, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.expertise-header, .expertise-list {
+    position: relative;
+    z-index: 1;
 }
 
 .expertise-header {
@@ -493,37 +511,50 @@ hr.rule {
 }
 
 .expertise-list {
-    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    padding: 0 40px;
 }
 
 .expertise-item {
-    display: grid;
-    grid-template-columns: 260px 1fr 180px;
-    align-items: center;
-    padding: 28px 40px;
-    border-bottom: 1px solid var(--border);
-    transition: background .3s;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 40px 32px;
+    background: rgba(22, 22, 22, 0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    transition: all .4s var(--ease);
     cursor: default;
 }
 
 .expertise-item:hover {
-    background: rgba(197, 160, 89, .04);
+    background: rgba(197, 160, 89, .08);
+    border-color: rgba(197, 160, 89, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
 }
 
 .expertise-num {
-    font-size: .75rem;
-    color: var(--txt-muted);
+    font-size: 1rem;
+    color: var(--accent);
     letter-spacing: .08em;
+    margin-bottom: 24px;
 }
 
 .expertise-title {
-    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
     font-weight: 400;
     letter-spacing: -.01em;
+    margin-bottom: 12px;
+    color: var(--txt);
 }
 
 .expertise-desc {
-    font-size: .83rem;
+    font-size: .88rem;
     color: var(--txt-muted);
     line-height: 1.6;
 }
